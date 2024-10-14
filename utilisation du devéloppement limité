@@ -1,0 +1,110 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+//Fonctions a utiliser dans le programme
+
+float taylor_cos(float x, unsigned int n);
+float taylor_sin(float x, unsigned int n);
+float taylor_tan(float x, unsigned int n);
+    	
+int main () 
+{ 
+	
+	int cos, sin, tan;
+	int choix; 
+	float angle, resultat;
+	
+	while (true) {
+         
+         //Choix de la fonction trigonométrique à utiliser
+         
+	  cout << "Bonjour cher utilisateur, veuillez choisir la fonction trigonométrique que vous voulez utiliser (cos, sin ou tan) : \n";
+	  cout << "1. cos \n";
+	  cout << "2. sin \n";
+	  cout << "3. tan \n";
+	  cout << "Votre choix (1-3) : ";
+	  cin >> choix;
+	  
+	  if (choix < 1 || choix > 3) {
+            cout << "Choix invalide. Veuillez réessayer.\n";
+            continue;
+       }
+   
+      //Entrée de l'angle
+      
+       cout<< " Veuillez entrer la mesure de votre angle en dégré : ";
+       cin >> angle;
+   
+   
+   
+	   switch (choix) {
+	   	
+	   	//Calcul des fonctions selon le choix
+	   	
+		  case 1:
+		      cout << "Vous avez choisi cosinus." << endl;
+		      
+		      // Exemple avec 10 termes
+              resultat = taylor_cos(angle, 10); 
+              cout << "cos(" << angle << ") ~ " << resultat << endl;
+              break;
+          case 2:
+              cout << "Vous avez choisi sinus." << endl;
+              
+              // Exemple avec 10 termes
+              resultat = taylor_sin(angle, 10); 
+              cout << "sin(" << angle << ") ~ " << resultat << endl;
+              break;
+          case 3:
+              cout << "Vous avez choisi tangente." << endl;
+              
+              // Exemple avec 10 termes
+              resultat = taylor_tan(angle, 10); 
+              cout << "tan(" << angle << ") ~ " << resultat << endl;
+              break;
+	   }
+   }
+
+}
+
+float taylor_cos(float x, unsigned int n) {
+	
+	// Conversion de l'angle de dégré en radians
+    x = x * 3.141592654 / 180; 
+    float p_c = 1;
+    float cosinus = 1;
+    int sign_c = 1;
+    for (unsigned int i = 1; i <= n; ++i) {
+        p_c = x * x / (2 * i * (2 * i - 1));
+        cosinus = sign_c * p_c;
+        sign_c = -1;
+    }
+    return cosinus;
+}
+
+float taylor_sin(float x, unsigned int n) {
+    
+    // Conversion de l'angle de dégré en radians
+    x = x * 3.141592654 / 180; 
+    float p_s = x;
+    float sinus = x;
+    int sign_s = 1;
+    for (unsigned int i = 1; i <= n; ++i) {
+        p_s = x * x / (2 * i * (2 * i + 1));
+        sinus = sign_s * p_s;
+        sign_s = -1;
+    }
+    return sinus;
+}
+
+float taylor_tan(float x, unsigned int n) {
+    float sin_x = taylor_sin(x, n);
+    float cos_x = taylor_cos(x, n);
+    if (cos_x != 0) {
+        return sin_x / cos_x;
+    } else {
+        cerr << "tan(" << x << ") est indéfini" << endl;
+        return NAN;
+    }
+}
